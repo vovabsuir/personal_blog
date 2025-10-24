@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="1" author="vovabsuir">
+        <createTable tableName="articles_metadata">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="created_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="date"/>
+        </createTable>
+
+        <createTable tableName="article_tags">
+            <column name="article_metadata_id" type="uuid">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_article_tags"/>
+            </column>
+            <column name="tag" type="varchar(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_article_tags"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="article_tags"
+                                 baseColumnNames="article_metadata_id"
+                                 constraintName="fk_article_tags"
+                                 referencedTableName="articles_metadata"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <createTable tableName="articles_contents">
+            <column name="article_metadata_id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="subscriptions">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confirmed_at" type="timestamp"/>
+            <column name="is_confirmed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
